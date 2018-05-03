@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "230301940248",
+    "firebase_url": "https://tamsui-217a9.firebaseio.com",
+    "project_id": "tamsui-217a9",
+    "storage_bucket": "tamsui-217a9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:230301940248:android:23affe37783b7eac",
+        "android_client_info": {
+          "package_name": "com.example.nora.tamsui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "230301940248-mimn5sgliffc96u0tf3afu1a13jliucn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nora.tamsui",
+            "certificate_hash": "f7f2b12211df36c701503b2cf4de8073e7e31591"
+          }
+        },
+        {
+          "client_id": "230301940248-gvmtcnrq4lnjvsilmeg5drfcrivui9gi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6uv7G5ya2_czbx0cazoPHgj5WQSeuWdA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "230301940248-gvmtcnrq4lnjvsilmeg5drfcrivui9gi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

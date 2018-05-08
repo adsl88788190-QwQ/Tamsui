@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Scene;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -101,12 +102,12 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
                     public void onSwipeOptionClicked(int viewID, int position) {
                         String message = "";
                         if (viewID == R.id.add) {
-                            message += "信仰不夠........請充值";
+                            message += "功能研發中";
                         } else if (viewID == R.id.edit) {
                             GoToEdit(position);
                             return;
                         } else if (viewID == R.id.change) {
-                            message += "不要給妳這個功能阿";
+                            message += "功能研發中...";
                         }
                         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }
@@ -126,12 +127,14 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
     }
 
     List<SceneData> list;
-
+    String TAG = "CteateData";
     private List<SceneData> getData() {
         list = getIntent().getParcelableArrayListExtra("Data");
-        for (SceneData temp : list) {
-            Log.e("getData", temp.getName());
+        if(list == null ){
+            Log.e(TAG,"LIST IS NULL");
+            return new ArrayList<>();
         }
+
         return list;
     }
 
@@ -208,8 +211,29 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
     }
 
     private void GoToEdit(int position){
+        Log.e(TAG,"SCENE : "+list.get(position).getScene());
         Intent intent = new Intent(CreateData_Activity.this, Notified_Data_Activity.class);
         intent.putExtra("Data", list.get(position));
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (Integer.parseInt(android.os.Build.VERSION.SDK) > 5
+                && keyCode == KeyEvent.KEYCODE_BACK
+                && event.getRepeatCount() == 0) {
+            Log.d("CDA", "onKeyDown Called");
+            onBackPressed();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Log.d("CDA", "onBackPressed Called");
+        Intent setIntent = new Intent(CreateData_Activity.this,SingInActivity.class);
+        startActivity(setIntent);
     }
 }

@@ -98,8 +98,12 @@ public class SingInActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     void FirebaseLogin(){
         firebaseAuth = FirebaseAuth.getInstance();
-        Intent intent = new Intent(SingInActivity.this,Download_Activity.class);
-        startActivity(intent);
+        if(pwd_et.getText().toString().equals("admin")) {
+            Intent intent = new Intent(SingInActivity.this, Download_Activity.class);
+            startActivity(intent);
+        }else{
+            Toast.makeText(SingInActivity.this,"密碼錯誤",Toast.LENGTH_SHORT).show();
+        }
 
 //
 //        //if(firebaseAuth != null )Log.e("TAMSUI",firebaseAuth.getCurrentUser().getUid());

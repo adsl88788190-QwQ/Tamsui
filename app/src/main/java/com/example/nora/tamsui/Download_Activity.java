@@ -26,18 +26,21 @@ public class Download_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_sing_in);
         dialog = ProgressDialog.show(Download_Activity.this,
                 "讀取中", "請等待...",true);
+        DownloadData = new ArrayList<>();
         getDataFromFirebase();
     }
 
-    static int ScenenIndex = 1;
+    int ScenenIndex = 1;
     String TAG = "CreateData";
-    ArrayList<SceneData> data = new ArrayList<>();
+    ArrayList<SceneData> DownloadData;
+    String collection = "Tamsui";
+    String documentName;
+
     void getDataFromFirebase() {
         //從資料庫下載資料
+        documentName = "Scene" + ScenenIndex;
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        String collection = "Tamsui";
-        String document = "Scene" + ScenenIndex;
-        DocumentReference docRef = db.collection(collection).document(document);
+        DocumentReference docRef = db.collection(collection).document(documentName);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -47,8 +50,10 @@ public class Download_Activity extends AppCompatActivity {
                         for (Map.Entry<String, Object> temp : document.getData().entrySet()) {
                             try {
                                 SceneData sceneData = new SceneData((Map<String, String>) temp.getValue());
-                                data.add(sceneData);
-                                //Log.e(TAG, sceneData.toString());
+                                sceneData.setScene(documentName);
+                                DownloadData.add(sceneData);
+//                                Log.e(TAG, "sceneData : "+temp.getValue().toString());
+//                                Log.e(TAG,"LIST GET: "+DownloadData.get(DownloadData.size()-1).getName());
                             } catch (Exception e) {
                                 Log.e(TAG, "Exception");
                             }
@@ -60,9 +65,8 @@ public class Download_Activity extends AppCompatActivity {
 
                         } else {
                             dialog.dismiss();
-                            Log.e(TAG,"Index"+data.size());
                             Intent intent = new Intent(Download_Activity.this,CreateData_Activity.class);
-                            intent.putParcelableArrayListExtra("Data",data);
+                            intent.putParcelableArrayListExtra("Data",DownloadData);
                             startActivity(intent);
                             Log.e(TAG,"mAdapter.notifyDataSetChanged()");
                         }

@@ -10,48 +10,57 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+
 /**
  * Created by Nora on 2017/12/17.
  */
 
 public class Introduction extends AppCompatActivity {
+    private SceneData data;
+    Button back;
+    TextView title;
+    TextView content;
+    TextView address;
+    ImageView image;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.introdution);
-        Button back = (Button)findViewById(R.id.introdution_back);
-        Bundle bundle = Introduction.this.getIntent().getExtras();
-
-        String PlaceName=bundle.getString("PlaceName");
-        String PlaceImage = bundle.getString("PlaceImage");
-        IntroductionData introductionData = new IntroductionData();
-        introductionData.check(PlaceName);
-
-        int id =getResources().getIdentifier(PlaceImage, "drawable", getPackageName());
-
-        TextView title = (TextView)findViewById(R.id.introdution_title);
-        TextView content = (TextView)findViewById(R.id.introdution_content);
-        TextView address = (TextView)findViewById(R.id.introdution_address);
-        ImageView image = (ImageView)findViewById(R.id.intorduction_image);
-
-        image.setImageResource(id);
-        title.setText(introductionData.getTitle());
-        title.setTextSize(50);
-        content.setText(introductionData.getContent());
-        content.setTextSize(25);
-        address.setText("地址："+introductionData.getAddress());
-        address.setTextSize(25);
-
-
-
+        getData();
+        CompontSetting();
+        setData();
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(Introduction.this,Random.class);
-                startActivity(intent);
                 Introduction.this.finish();
             }
         });
+    }
+
+    private void CompontSetting() {
+        back = (Button) findViewById(R.id.introdution_back);
+        title = (TextView) findViewById(R.id.introdution_title);
+        content = (TextView) findViewById(R.id.introdution_content);
+        address = (TextView) findViewById(R.id.introdution_address);
+        image = (ImageView) findViewById(R.id.intorduction_image);
+    }
+
+    public void getData() {
+        data = getIntent().getParcelableExtra("IntroData");
+    }
+
+    private void setData() {
+
+        title.setText(data.getName());
+        content.setText(data.getDescription());
+        address.setText("地址"+data.getAddress());
+        Glide.with(this)
+                .load(data.getImagePath())
+                .apply(new RequestOptions().centerCrop().diskCacheStrategy(DiskCacheStrategy.RESOURCE))
+                .into(image);
     }
 }

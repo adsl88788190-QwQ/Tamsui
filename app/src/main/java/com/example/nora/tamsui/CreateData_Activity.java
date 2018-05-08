@@ -2,28 +2,42 @@ package com.example.nora.tamsui;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Scene;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.nikhilpanju.recyclerviewenhanced.OnActivityTouchListener;
 import com.nikhilpanju.recyclerviewenhanced.RecyclerTouchListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class CreateData_Activity extends AppCompatActivity implements RecyclerTouchListener.RecyclerTouchListenerHelper{
+public class CreateData_Activity extends AppCompatActivity implements RecyclerTouchListener.RecyclerTouchListenerHelper {
 
     RecyclerView mRecyclerView;
     MainAdapter mAdapter;
@@ -34,9 +48,10 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
     private OnActivityTouchListener touchListener;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createdata);
+
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("RecyclerViewEnhanced");
 
@@ -46,9 +61,13 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
         for (int i = 0; i < 25; i++) {
             dialogItems[i] = String.valueOf(i + 1);
         }
-
+        getData();
         mRecyclerView = (RecyclerView) findViewById(R.id.DataRecycleView);
-        mAdapter = new MainAdapter(this, getData());
+        RecycleViewSetting();
+    }
+
+    public void RecycleViewSetting() {
+        mAdapter = new MainAdapter(this, list);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -59,18 +78,21 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
                 .setClickable(new RecyclerTouchListener.OnRowClickListener() {
                     @Override
                     public void onRowClicked(int position) {
-                        Toast.makeText(CreateData_Activity.this,"CLICK "+position,Toast.LENGTH_SHORT);
+                        //GoToEdit(position);
                     }
 
                     @Override
                     public void onIndependentViewClicked(int independentViewID, int position) {
-                        Toast.makeText(CreateData_Activity.this,"Button in row " + (position + 1) + " clicked!",Toast.LENGTH_SHORT);
+                        GoToEdit(position);
+
                     }
                 })
                 .setLongClickable(true, new RecyclerTouchListener.OnRowLongClickListener() {
                     @Override
                     public void onRowLongClicked(int position) {
-                        Toast.makeText(CreateData_Activity.this,"Row " + (position + 1) + " long clicked!",Toast.LENGTH_SHORT);
+
+                        Toast.makeText(getApplicationContext(), "Row " + (position + 1) + " long clicked!", Toast.LENGTH_SHORT).show();
+
                     }
                 })
                 .setSwipeOptionViews(R.id.add, R.id.edit, R.id.change)
@@ -79,14 +101,14 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
                     public void onSwipeOptionClicked(int viewID, int position) {
                         String message = "";
                         if (viewID == R.id.add) {
-                            message += "Add";
+                            message += "信仰不夠........請充值";
                         } else if (viewID == R.id.edit) {
-                            message += "Edit";
+                            GoToEdit(position);
+                            return;
                         } else if (viewID == R.id.change) {
-                            message += "Change";
+                            message += "不要給妳這個功能阿";
                         }
-                        message += " clicked for row " + (position + 1);
-                        Toast.makeText(CreateData_Activity.this,message,Toast.LENGTH_SHORT);
+                        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -94,7 +116,8 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
     @Override
     protected void onResume() {
         super.onResume();
-        mRecyclerView.addOnItemTouchListener(onTouchListener); }
+        mRecyclerView.addOnItemTouchListener(onTouchListener);
+    }
 
     @Override
     protected void onPause() {
@@ -102,101 +125,34 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
         mRecyclerView.removeOnItemTouchListener(onTouchListener);
     }
 
-    private List<RowModel> getData() {
-        List<RowModel> list = new ArrayList<>(25);
-        for (int i = 0; i < 25; i++) {
-            list.add(new RowModel("Row " + (i + 1), "Some Text... "));
+    List<SceneData> list;
+
+    private List<SceneData> getData() {
+        list = getIntent().getParcelableArrayListExtra("Data");
+        for (SceneData temp : list) {
+            Log.e("getData", temp.getName());
         }
         return list;
     }
-//
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
 
-    //右上角點擊 暫時不要
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        boolean currentState = false;
-//        if (item.isCheckable()) {
-//            currentState = item.isChecked();
-//            item.setChecked(!currentState);
-//        }
-//        switch (item.getItemId()) {
-//            case R.id.menu_swipeable:
-//                onTouchListener.setSwipeable(!currentState);
-//                return true;
-//            case R.id.menu_clickable:
-//                onTouchListener.setClickable(!currentState);
-//                return true;
-//            case R.id.menu_unclickableRows:
-//                showMultiSelectDialog(unclickableRows, item.getItemId());
-//                return true;
-//            case R.id.menu_unswipeableRows:
-//                showMultiSelectDialog(unswipeableRows, item.getItemId());
-//                return true;
-//            case R.id.menu_openOptions:
-//                showSingleSelectDialog();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-//
-//    private void showMultiSelectDialog(final List<Integer> list, final int menuId) {
-//        boolean[] checkedItems = new boolean[25];
-//        for (int i = 0; i < list.size(); i++) {
-//            checkedItems[list.get(i)] = true;
-//        }
-//
-//        String title = "Select {} Rows";
-//        if (menuId == R.id.menu_unclickableRows) title = title.replace("{}", "Unclickable");
-//        else title = title.replace("{}", "Unswipeable");
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-//                .setTitle(title)
-//                .setMultiChoiceItems(dialogItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-//                        if (isChecked)
-//                            list.add(which);
-//                        else
-//                            list.remove(which);
-//                    }
-//                })
-//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Integer[] tempArray = new Integer[list.size()];
-//                        if (menuId == R.id.menu_unclickableRows)
-//                            onTouchListener.setUnClickableRows(list.toArray(tempArray));
-//                        else
-//                            onTouchListener.setUnSwipeableRows(list.toArray(tempArray));
-//                    }
-//                });
-//        builder.create().show();
-//    }
-//
-//    private void showSingleSelectDialog() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-//                .setTitle("Open Swipe Options for row: ")
-//                .setSingleChoiceItems(dialogItems, 0, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        openOptionsPosition = which;
-//                    }
-//                })
-//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        onTouchListener.openSwipeOptions(openOptionsPosition);
-//                    }
-//                });
-//        builder.create().show();
-//    }
+
+    private void showSingleSelectDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Open Swipe Options for row: ")
+                .setSingleChoiceItems(dialogItems, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openOptionsPosition = which;
+                    }
+                })
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onTouchListener.openSwipeOptions(openOptionsPosition);
+                    }
+                });
+        builder.create().show();
+    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -209,14 +165,13 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
         this.touchListener = listener;
     }
 
-
     private class MainAdapter extends RecyclerView.Adapter<MainAdapter.MainViewHolder> {
         LayoutInflater inflater;
-        List<RowModel> modelList;
+        List<SceneData> dataList;
 
-        public MainAdapter(Context context, List<RowModel> list) {
+        public MainAdapter(Context context, List<SceneData> list) {
             inflater = LayoutInflater.from(context);
-            modelList = new ArrayList<>(list);
+            dataList = new ArrayList<>(list);
         }
 
         @Override
@@ -227,28 +182,34 @@ public class CreateData_Activity extends AppCompatActivity implements RecyclerTo
 
         @Override
         public void onBindViewHolder(MainViewHolder holder, int position) {
-            holder.bindData(modelList.get(position));
+            holder.bindData(dataList.get(position));
         }
 
         @Override
         public int getItemCount() {
-            return modelList.size();
+            return dataList.size();
         }
 
         class MainViewHolder extends RecyclerView.ViewHolder {
 
-            TextView mainText, subText;
+            TextView Name, Description, Address;
 
             public MainViewHolder(View itemView) {
                 super(itemView);
-                mainText = (TextView) itemView.findViewById(R.id.mainText);
-                subText = (TextView) itemView.findViewById(R.id.subText);
+                Name = (TextView) itemView.findViewById(R.id.mainText);
+                Description = (TextView) itemView.findViewById(R.id.subText);
             }
 
-            public void bindData(RowModel rowModel) {
-                mainText.setText(rowModel.getMainText());
-                subText.setText(rowModel.getSubText());
+            public void bindData(SceneData sceneData) {
+                Name.setText(sceneData.getName());
+                Description.setText(sceneData.getDescription().substring(0, 15) + ".....\n Address :" + sceneData.getAddress());
             }
         }
+    }
+
+    private void GoToEdit(int position){
+        Intent intent = new Intent(CreateData_Activity.this, Notified_Data_Activity.class);
+        intent.putExtra("Data", list.get(position));
+        startActivity(intent);
     }
 }

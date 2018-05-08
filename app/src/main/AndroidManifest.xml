@@ -19,7 +19,9 @@
         <activity android:name=".Random" />
         <activity android:name=".Introduction" />
         <activity android:name=".Tamsui_menu"></activity>
-
+        <activity android:name=".CreateData_Activity"></activity>
+        <activity android:name=".Notified_Data_Activity"></activity>
+        <activity android:name=".Download_Activity"></activity>
     </application>
 
 </manifest>

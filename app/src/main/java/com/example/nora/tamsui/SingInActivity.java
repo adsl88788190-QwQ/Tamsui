@@ -15,6 +15,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,7 +63,7 @@ public class SingInActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                //沒選任何東西時  默認選第一個 Guestq
+                //沒選任何東西時  默認選第一個 Guest
                 user_spn.setSelection(0);
             }
         });
@@ -82,7 +84,7 @@ public class SingInActivity extends AppCompatActivity {
                     String password = pwd_et.getText().toString();
                     //檢查密碼是否有錯 錯誤則跳出訊息
                     if (TextUtils.isEmpty(password)) {
-                        Toast.makeText(SingInActivity.this,"密碼錯誤",Toast.LENGTH_SHORT);
+                        Toast.makeText(SingInActivity.this,"密碼錯誤",Toast.LENGTH_SHORT).show();
                         return;
                     }
                     //登入檢查
@@ -96,25 +98,26 @@ public class SingInActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     void FirebaseLogin(){
         firebaseAuth = FirebaseAuth.getInstance();
+        Intent intent = new Intent(SingInActivity.this,Download_Activity.class);
+        startActivity(intent);
 
-        String account = user_spn.getSelectedItem().toString()+"@gmail.com";
-        String pwd = pwd_et.getText().toString();
-        Log.e("TAMSUI","FirebaseLogin");
-        firebaseAuth.signInWithEmailAndPassword(account,pwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                //登入成功
-                if(task.isSuccessful()){
-                    //進去新增修改選單
-                    Toast.makeText(SingInActivity.this,"新增修改選單",Toast.LENGTH_SHORT).show();
-                    Log.e("TAMSUI","SUCCESS");
-                }
-                else{
-                    Log.e("TAMSUI","Login Error");
-                    Toast.makeText(SingInActivity.this,"登入錯誤",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//
+//        //if(firebaseAuth != null )Log.e("TAMSUI",firebaseAuth.getCurrentUser().getUid());
+//        firebaseAuth.signInWithEmailAndPassword(account,pwd).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<AuthResult> task) {
+//                //登入成功
+//                if(task.isSuccessful()){
+//                    //進去新增修改選單
+//                    Toast.makeText(SingInActivity.this,"新增修改選單",Toast.LENGTH_SHORT).show();
+//                    Log.e("TAMSUI","SUCCESS");
+//                }
+//                else{
+//                    Log.e("TAMSUI","Login Error "+task.toString());
+//                    Toast.makeText(SingInActivity.this,"登入錯誤",Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
     }
 }

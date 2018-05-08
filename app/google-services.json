@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "230301940248",
-    "firebase_url": "https://tamsui-217a9.firebaseio.com",
-    "project_id": "tamsui-217a9",
-    "storage_bucket": "tamsui-217a9.appspot.com"
+    "project_number": "68831358421",
+    "firebase_url": "https://tamsui-b5f6f.firebaseio.com",
+    "project_id": "tamsui-b5f6f",
+    "storage_bucket": "tamsui-b5f6f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:230301940248:android:23affe37783b7eac",
+        "mobilesdk_app_id": "1:68831358421:android:23affe37783b7eac",
         "android_client_info": {
           "package_name": "com.example.nora.tamsui"
         }
       },
       "oauth_client": [
         {
-          "client_id": "230301940248-mimn5sgliffc96u0tf3afu1a13jliucn.apps.googleusercontent.com",
+          "client_id": "68831358421-p8vur5q69chf3lns1pvcljrss2tsetqd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.nora.tamsui",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "230301940248-gvmtcnrq4lnjvsilmeg5drfcrivui9gi.apps.googleusercontent.com",
+          "client_id": "68831358421-b5v7lgu780kjm4gjfsvodc84f7afcdas.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB6uv7G5ya2_czbx0cazoPHgj5WQSeuWdA"
+          "current_key": "AIzaSyBJs4L-Tg8X5p0w496ZYu6wzLw2jpbRRe0"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "230301940248-gvmtcnrq4lnjvsilmeg5drfcrivui9gi.apps.googleusercontent.com",
+              "client_id": "68831358421-b5v7lgu780kjm4gjfsvodc84f7afcdas.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
